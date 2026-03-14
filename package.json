@@ -1,0 +1,9 @@
+{
+  "name": "oddsiq-pro",
+  "version": "1.0.0",
+  "description": "OddsIQ Pro — Analyseur de cotes football",
+  "private": true,
+  "engines": {
+    "node": "18.x"
+  }
+}

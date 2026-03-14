@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>OddsIQ Pro</title>
+<meta name="theme-color" content="#0a0a12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="OddsIQ">
+<link rel="manifest" id="pwa-manifest">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a12;--bg2:#10101e;--bg3:#18182a;--bg4:#202038;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
+  --text:#f0f0fa;--muted:#6666aa;--dim:#333355;
+  --accent:#7c6ff7;--accent2:#a09aff;
+  --green:#3de8a0;--red:#f06060;--amber:#f0a830;--blue:#4ab4f7;
+  --green-bg:rgba(61,232,160,0.1);--red-bg:rgba(240,96,96,0.1);
+  --amber-bg:rgba(240,168,48,0.1);--blue-bg:rgba(74,180,247,0.1);
+  --sans:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh}
+
+/* HEADER */
+.hdr{background:var(--bg2);border-bottom:0.5px solid var(--border2);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-icon{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-txt{font-size:18px;font-weight:700;letter-spacing:-.5px}
+.logo-txt b{color:var(--accent)}
+.hdr-date{font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+/* MAIN TABS — 2 big modules */
+.modules{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--bg2);border-bottom:0.5px solid var(--border2)}
+.mod-tab{padding:14px 10px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;background:transparent;border-top:none;border-left:none;border-right:none;font-family:var(--sans)}
+.mod-tab .mod-icon{font-size:22px;display:block;margin-bottom:4px}
+.mod-tab .mod-name{font-size:12px;font-weight:700;color:var(--muted)}
+.mod-tab .mod-desc{font-size:10px;color:var(--dim);margin-top:2px}
+.mod-tab.on{border-bottom-color:var(--accent);background:rgba(124,111,247,0.05)}
+.mod-tab.on .mod-name{color:var(--accent2)}
+.mod-tab.on .mod-desc{color:var(--muted)}
+
+/* SUB TABS */
+.subtabs{display:flex;overflow-x:auto;background:var(--bg2);border-bottom:0.5px solid var(--border);padding:0 10px;gap:0}
+.subtabs::-webkit-scrollbar{display:none}
+.stab{font-size:11px;font-weight:600;padding:9px 13px;color:var(--dim);cursor:pointer;border-bottom:1.5px solid transparent;white-space:nowrap;background:transparent;border-top:none;border-left:none;border-right:none;font-family:var(--sans);transition:all .15s}
+.stab:hover{color:var(--muted)}
+.stab.on{color:var(--text);border-bottom-color:var(--green)}
+
+/* BODY */
+.body{padding:14px 14px 100px;max-width:900px;margin:0 auto}
+.page{display:none}.page.on{display:block}
+
+/* CARD */
+.card{background:var(--bg2);border:0.5px solid var(--border2);border-radius:14px;padding:16px;margin-bottom:12px}
+.card.green-border{border-color:rgba(61,232,160,0.35)}
+.card.accent-border{border-color:rgba(124,111,247,0.35)}
+.ch{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:13px;display:flex;align-items:center;gap:7px}
+
+/* FIELDS */
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select{background:var(--bg);border:0.5px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:14px;font-weight:700;padding:9px 11px;border-radius:9px;width:100%;transition:border-color .15s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent)}
+.field input::placeholder{color:var(--dim);font-weight:400;font-size:13px}
+.field select{font-family:var(--sans);font-size:13px;font-weight:500}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+
+/* BUTTONS */
+.btn{width:100%;padding:13px;font-size:13px;font-weight:700;background:var(--accent);color:#fff;border:none;border-radius:11px;cursor:pointer;font-family:var(--sans);letter-spacing:.02em;margin-top:12px;transition:all .15s}
+.btn:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn.green{background:var(--green);color:#000}
+.btn.green:hover{background:#5af0b5;color:#000}
+.btn.ghost{background:transparent;border:0.5px solid var(--border2);color:var(--muted)}
+.btn.ghost:hover{background:var(--bg3);color:var(--text)}
+.btn.sm{padding:8px 16px;font-size:11px;width:auto;margin-top:0;border-radius:8px}
+
+/* METRICS */
+.met{background:var(--bg);border:0.5px solid var(--border);border-radius:11px;padding:11px}
+.ml{font-size:9px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.mv{font-family:var(--mono);font-size:20px;font-weight:700}
+.ms{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* RESULT BOXES */
+.rb{border-radius:12px;padding:14px;margin-bottom:9px;border:0.5px solid}
+.rb.green{background:var(--green-bg);border-color:rgba(61,232,160,.25)}
+.rb.amber{background:var(--amber-bg);border-color:rgba(240,168,48,.25)}
+.rb.red{background:var(--red-bg);border-color:rgba(240,96,96,.25)}
+.rb.blue{background:var(--blue-bg);border-color:rgba(74,180,247,.25)}
+.rb.purple{background:rgba(124,111,247,.08);border-color:rgba(124,111,247,.25)}
+.rb-t{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+.rb-t.green{color:var(--green)}.rb-t.amber{color:var(--amber)}.rb-t.red{color:var(--red)}.rb-t.blue{color:var(--blue)}.rb-t.purple{color:var(--accent2)}
+.rb-tx{font-size:13px;color:var(--muted);line-height:1.7}
+.rb-tx strong{color:var(--text);font-weight:600}
+
+/* TAGS */
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin:2px}
+.tg{background:rgba(61,232,160,.15);color:var(--green)}
+.ta{background:rgba(240,168,48,.15);color:var(--amber)}
+.tr{background:rgba(240,96,96,.15);color:var(--red)}
+.tb{background:rgba(74,180,247,.15);color:var(--blue)}
+.tp{background:rgba(124,111,247,.15);color:var(--accent2)}
+
+/* BARS */
+.bar-row{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:3px}
+.bar-bg{height:7px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .7s ease}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:7px 10px;color:var(--muted);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:0.5px solid var(--border)}
+.tbl td{padding:8px 10px;border-bottom:0.5px solid var(--border);color:var(--muted)}
+.tbl td:first-child{color:var(--text);font-weight:500}
+.tbl tr:last-child td{border-bottom:none}
+
+/* ROW */
+.row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:.5px solid var(--border)}
+.row:last-child{border-bottom:none}
+.rl{font-size:12px;color:var(--muted)}
+.rv{font-size:13px;font-weight:600;font-family:var(--mono)}
+
+/* DIVIDER */
+.div{height:.5px;background:var(--border);margin:14px 0}
+
+/* WARN */
+.warn{background:rgba(240,168,48,.07);border:.5px solid rgba(240,168,48,.2);border-radius:9px;padding:10px 13px;font-size:11px;color:rgba(240,168,48,.85);line-height:1.65;margin-bottom:13px}
+
+/* MATCH CARD (AUTO) */
+.mc{background:var(--bg2);border:.5px solid var(--border);border-radius:12px;padding:13px;margin-bottom:8px;transition:border-color .15s}
+.mc.with-odds{border-left:3px solid var(--green)}
+.mc-league{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.mc-teams{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.mc-team{font-size:13px;font-weight:600;flex:1}
+.mc-team.b{text-align:right}
+.mc-vs{font-size:11px;color:var(--dim);margin:0 8px;flex-shrink:0}
+.mc-time{font-size:11px;color:var(--muted)}
+.odds-strip{display:flex;gap:5px;margin:8px 0}
+.odd{flex:1;background:var(--bg3);border:.5px solid var(--border);border-radius:8px;padding:6px 4px;text-align:center}
+.odd-l{font-size:9px;color:var(--dim);font-weight:700;text-transform:uppercase}
+.odd-v{font-family:var(--mono);font-size:14px;font-weight:700;margin-top:1px}
+.odd-p{font-size:9px;color:var(--muted);margin-top:1px}
+.analyse-btn{width:100%;padding:7px;font-size:11px;font-weight:700;background:rgba(124,111,247,.12);color:var(--accent2);border:.5px solid rgba(124,111,247,.3);border-radius:8px;cursor:pointer;font-family:var(--sans);margin-top:7px;transition:all .15s}
+.analyse-btn:hover{background:rgba(124,111,247,.22)}
+.sig-strip{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+
+/* CONF METER */
+.conf-wrap{margin:10px 0}
+.conf-lbl{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;color:var(--muted)}
+.conf-bar{height:9px;background:var(--bg3);border-radius:5px;overflow:hidden}
+.conf-fill{height:100%;border-radius:5px;transition:width .8s ease}
+
+/* PARIS LOG */
+.pari{background:var(--bg3);border:.5px solid var(--border);border-radius:10px;padding:11px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+
+/* DATE BTNS */
+.date-btn{font-size:11px;font-weight:700;padding:7px 13px;border:.5px solid var(--border2);border-radius:20px;background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap;font-family:var(--sans);transition:all .15s}
+.date-btn:hover{color:var(--text);border-color:var(--border3)}
+.date-btn.on{background:rgba(124,111,247,.15);color:var(--accent2);border-color:rgba(124,111,247,.4)}
+
+/* FILTER PILLS */
+.filter-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+.fpill{font-size:11px;font-weight:600;padding:5px 12px;border:.5px solid var(--border2);border-radius:20px;background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap;font-family:var(--sans);transition:all .15s}
+.fpill:hover{color:var(--text)}
+.fpill.on{background:rgba(61,232,160,.12);color:var(--green);border-color:rgba(61,232,160,.4)}
+
+/* API CONFIG */
+.api-box{background:var(--bg3);border:.5px solid var(--border2);border-radius:12px;padding:14px;margin-bottom:12px}
+.api-box-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.api-box-sub{font-size:11px;color:var(--muted);line-height:1.6;margin-bottom:10px}
+
+/* LOADING */
+.loading{text-align:center;padding:30px;color:var(--muted)}
+.loading-icon{font-size:28px;margin-bottom:8px;animation:spin 1s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:13px}
+
+/* ANIM */
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.pop{animation:pop .25s ease}
+
+/* SCORE GRID */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.sc{background:var(--bg);border:.5px solid var(--border);border-radius:8px;padding:8px 4px;text-align:center}
+.sc.best{border-color:var(--green);background:rgba(61,232,160,.07)}
+.sc.good{border-color:var(--amber);background:rgba(240,168,48,.06)}
+.sc-s{font-family:var(--mono);font-size:13px;font-weight:700}
+.sc-c{font-size:10px;color:var(--muted);margin-top:2px}
+.sc-p{font-size:10px;margin-top:2px;font-weight:600}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div class="logo-txt">Odds<b>IQ</b> Pro</div>
+  </div>
+  <div class="hdr-date" id="hdr-date"></div>
+</div>
+
+<!-- 2 MODULES PRINCIPAUX -->
+<div class="modules">
+  <button class="mod-tab on" onclick="switchModule('manual',this)">
+    <span class="mod-icon">✍️</span>
+    <span class="mod-name">Manuel</span>
+    <span class="mod-desc">J'entre les cotes moi-même</span>
+  </button>
+  <button class="mod-tab" onclick="switchModule('auto',this)">
+    <span class="mod-icon">🤖</span>
+    <span class="mod-name">Automatique</span>
+    <span class="mod-desc">Matchs + cotes récupérés</span>
+  </button>
+</div>
+
+<!-- ====================================================
+     MODULE MANUEL — sous-onglets
+     ==================================================== -->
+<div id="module-manual">
+  <div class="subtabs">
+    <button class="stab on" onclick="showSub('m','session',this)">⚡ Session</button>
+    <button class="stab" onclick="showSub('m','decoder',this)">🔍 Décodeur</button>
+    <button class="stab" onclick="showSub('m','scores',this)">🎯 Scores</button>
+    <button class="stab" onclick="showSub('m','poisson',this)">📐 Poisson</button>
+    <button class="stab" onclick="showSub('m','ev',this)">💰 Value Bet</button>
+    <button class="stab" onclick="showSub('m','kelly',this)">📊 Bankroll</button>
+    <button class="stab" onclick="showSub('m','guide',this)">📖 Guide</button>
+    <button class="stab" onclick="showSub('m','log',this)">🗒️ Journal</button>
+  </div>
+
+  <div class="body">
+
+    <!-- SESSION -->
+    <div class="page on" id="m-session">
+      <div class="warn">⚠️ Outil d'analyse. Aucun algorithme ne garantit un résultat. Jouez responsablement.</div>
+      <div class="card">
+        <div class="ch"><span>⚡</span> Analyse rapide d'un match</div>
+        <div class="g3" style="margin-bottom:9px">
+          <div class="field"><label>Victoire A (dom)</label><input type="number" id="s_c1" step="0.05" min="1.01" placeholder="1.80"></div>
+          <div class="field"><label>Match nul</label><input type="number" id="s_cx" step="0.05" min="1.01" placeholder="3.40"></div>
+          <div class="field"><label>Victoire B (ext)</label><input type="number" id="s_c2" step="0.05" min="1.01" placeholder="4.20"></div>
+        </div>
+        <div class="g3" style="margin-bottom:9px">
+          <div class="field"><label>Over 2.5</label><input type="number" id="s_ov" step="0.05" min="1.01" placeholder="1.90"></div>
+          <div class="field"><label>BTTS Oui</label><input type="number" id="s_bt" step="0.05" min="1.01" placeholder="1.75"></div>
+          <div class="field"><label>Cote 0-0</label><input type="number" id="s_00" step="0.5" min="2" placeholder="12"></div>
+        </div>
+        <div class="g2">
+          <div class="field"><label>Cote 1-1</label><input type="number" id="s_11" step="0.5" min="3" placeholder="7.5"></div>
+          <div class="field"><label>Cote 2-2</label><input type="number" id="s_22" step="0.5" min="5" placeholder="13"></div>
+        </div>
+        <button class="btn" onclick="runSession()">⚡ Analyser ce match</button>
+      </div>
+      <div id="session-out"></div>
+    </div>
+
+    <!-- DÉCODEUR -->
+    <div class="page" id="m-decoder">
+      <div class="card">
+        <div class="ch"><span>🔍</span> Décodeur complet</div>
+        <div class="g3" style="margin-bottom:9px">
+          <div class="field"><label>Victoire A</label><input type="number" id="d_c1" value="1.80" step="0.05" min="1.01"></div>
+          <div class="field"><label>Nul</label><input type="number" id="d_cx" value="3.40" step="0.05" min="1.01"></div>
+          <div class="field"><label>Victoire B</label><input type="number" id="d_c2" value="4.20" step="0.05" min="1.01"></div>
+        </div>
+        <div class="g2" style="margin-bottom:9px">
+          <div class="field"><label>Over 2.5</label><input type="number" id="d_ov" value="1.90" step="0.05" min="1.01"></div>
+          <div class="field"><label>Under 2.5</label><input type="number" id="d_un" value="1.90" step="0.05" min="1.01"></div>
+          <div class="field"><label>BTTS Oui</label><input type="number" id="d_by" value="1.75" step="0.05" min="1.01"></div>
+          <div class="field"><label>BTTS Non</label><input type="number" id="d_bn" value="2.00" step="0.05" min="1.01"></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Cote 0-0</label><input type="number" id="d_00" value="12" step="0.5" min="2"></div>
+          <div class="field"><label>Cote 1-1</label><input type="number" id="d_11" value="7.5" step="0.5" min="3"></div>
+          <div class="field"><label>Cote 2-2</label><input type="number" id="d_22" value="13" step="0.5" min="5"></div>
+        </div>
+        <button class="btn" onclick="runDecoder()">Décoder →</button>
+      </div>
+      <div id="decoder-out"></div>
+    </div>
+
+    <!-- SCORES EXACTS -->
+    <div class="page" id="m-scores">
+      <div class="card">
+        <div class="ch"><span>🎯</span> Analyse scores exacts</div>
+        <div class="sg" style="gap:8px;margin-bottom:12px">
+          <div class="field"><label>1–0</label><input type="number" id="e_10" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>0–1</label><input type="number" id="e_01" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>2–0</label><input type="number" id="e_20" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>0–2</label><input type="number" id="e_02" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>2–1</label><input type="number" id="e_21" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>1–2</label><input type="number" id="e_12" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>1–1</label><input type="number" id="e_11" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>0–0</label><input type="number" id="e_00" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>3–0</label><input type="number" id="e_30" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>0–3</label><input type="number" id="e_03" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>3–1</label><input type="number" id="e_31" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>2–2</label><input type="number" id="e_22" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>3–2</label><input type="number" id="e_32" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>4–0</label><input type="number" id="e_40" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>4–1</label><input type="number" id="e_41" step="0.5" min="2" placeholder="—"></div>
+          <div class="field"><label>3–3</label><input type="number" id="e_33" step="0.5" min="2" placeholder="—"></div>
+        </div>
+        <button class="btn" onclick="runScores()">Analyser →</button>
+      </div>
+      <div id="scores-out"></div>
+    </div>
+
+    <!-- POISSON -->
+    <div class="page" id="m-poisson">
+      <div class="card">
+        <div class="ch"><span>📐</span> Modèle Poisson + Dixon-Coles</div>
+        <div class="g2" style="margin-bottom:9px">
+          <div class="field"><label>Moy. buts marqués A/match</label><input type="number" id="p_am" value="1.8" step="0.1" min="0.1"></div>
+          <div class="field"><label>Moy. buts concédés A/match</label><input type="number" id="p_ac" value="1.1" step="0.1" min="0.1"></div>
+          <div class="field"><label>Moy. buts marqués B/match</label><input type="number" id="p_bm" value="1.3" step="0.1" min="0.1"></div>
+          <div class="field"><label>Moy. buts concédés B/match</label><input type="number" id="p_bc" value="1.6" step="0.1" min="0.1"></div>
+        </div>
+        <div class="g2">
+          <div class="field"><label>Moy. buts ligue (domicile)</label><input type="number" id="p_ld" value="1.5" step="0.1" min="0.5"></div>
+          <div class="field"><label>Moy. buts ligue (extérieur)</label><input type="number" id="p_le" value="1.2" step="0.1" min="0.3"></div>
+        </div>
+        <button class="btn" onclick="runPoisson()">Calculer →</button>
+      </div>
+      <div id="poisson-out"></div>
+    </div>
+
+    <!-- VALUE BET -->
+    <div class="page" id="m-ev">
+      <div class="card">
+        <div class="ch"><span>💰</span> Value Bet (EV)</div>
+        <div class="field" style="margin-bottom:9px"><label>Cote bookmaker</label><input type="number" id="v_cote" value="2.10" step="0.05" min="1.01"></div>
+        <div class="field" style="margin-bottom:9px"><label>Ta probabilité estimée (%)</label><input type="number" id="v_prob" value="55" step="1" min="1" max="99"></div>
+        <div class="field"><label>Mise (€)</label><input type="number" id="v_mise" value="20" step="5" min="1"></div>
+        <button class="btn" onclick="runEV()">Calculer →</button>
+      </div>
+      <div id="ev-out"></div>
+      <div class="card" style="margin-top:4px">
+        <div class="ch">Référence rapide</div>
+        <table class="tbl"><thead><tr><th>Cote</th><th>Prob implicite</th><th>EV+5% si prob ></th><th>EV+10% si prob ></th></tr></thead>
+        <tbody id="ev-ref"></tbody></table>
+      </div>
+    </div>
+
+    <!-- KELLY -->
+    <div class="page" id="m-kelly">
+      <div class="card">
+        <div class="ch"><span>📊</span> Kelly ¼ — Mise optimale</div>
+        <div class="field" style="margin-bottom:9px"><label>Bankroll (€)</label><input type="number" id="k_bk" value="500" step="50" min="10"></div>
+        <div class="field" style="margin-bottom:9px"><label>Cote</label><input type="number" id="k_cote" value="2.00" step="0.05" min="1.01"></div>
+        <div class="field"><label>Ta probabilité (%)</label><input type="number" id="k_prob" value="55" step="1" min="1" max="99"></div>
+        <button class="btn" onclick="runKelly()">Calculer →</button>
+      </div>
+      <div id="kelly-out"></div>
+      <div class="card">
+        <div class="ch">Règles bankroll</div>
+        <div class="row"><span class="rl">Simple (value forte)</span><span class="rv" style="color:var(--green)">max 4%</span></div>
+        <div class="row"><span class="rl">Simple (value correcte)</span><span class="rv" style="color:var(--green)">max 2%</span></div>
+        <div class="row"><span class="rl">Combiné 2 sel.</span><span class="rv" style="color:var(--amber)">max 2%</span></div>
+        <div class="row"><span class="rl">Combiné 3 sel.</span><span class="rv" style="color:var(--amber)">max 1%</span></div>
+        <div class="row"><span class="rl">Score exact</span><span class="rv" style="color:var(--red)">max 0.5%</span></div>
+        <div class="row"><span class="rl">Après 3 pertes</span><span class="rv" style="color:var(--red)">réduire 50%</span></div>
+      </div>
+    </div>
+
+    <!-- GUIDE -->
+    <div class="page" id="m-guide">
+      <div class="card"><div class="ch"><span>🌡️</span> Cote 0-0 = thermomètre</div>
+        <table class="tbl"><thead><tr><th>Cote 0-0</th><th>Signal</th><th>Marché</th></tr></thead><tbody>
+          <tr><td>6–8</td><td><span class="tag tr">Très fermé</span></td><td>Under 1.5</td></tr>
+          <tr><td>8–11</td><td><span class="tag ta">Peu de buts</span></td><td>Under 2.5</td></tr>
+          <tr><td>11–14</td><td><span class="tag ta">2 buts</span></td><td>Over 1.5</td></tr>
+          <tr><td>14–20</td><td><span class="tag tg">3 buts</span></td><td>Over 2.5</td></tr>
+          <tr><td>20+</td><td><span class="tag tg">4+ buts</span></td><td>Over 3.5</td></tr>
+        </tbody></table>
+      </div>
+      <div class="card"><div class="ch"><span>🔍</span> Cote 1-1 = détecteur BTTS</div>
+        <table class="tbl"><thead><tr><th>Cote 1-1</th><th>Signal</th></tr></thead><tbody>
+          <tr><td>5–6.5</td><td><span class="tag tg">BTTS Oui très probable</span></td></tr>
+          <tr><td>6.5–8</td><td><span class="tag tg">BTTS Oui probable</span></td></tr>
+          <tr><td>8–10</td><td><span class="tag ta">Incertain</span></td></tr>
+          <tr><td>10+</td><td><span class="tag tr">BTTS Non probable</span></td></tr>
+        </tbody></table>
+      </div>
+      <div class="card"><div class="ch"><span>🎯</span> Cote 2-2 = signal offensif</div>
+        <table class="tbl"><thead><tr><th>Cote 2-2</th><th>Signal</th><th>Marché</th></tr></thead><tbody>
+          <tr><td>11–13</td><td><span class="tag tg">3+ buts + BTTS confirmé</span></td><td>Over 2.5 + BTTS Oui</td></tr>
+          <tr><td>13–16</td><td><span class="tag tg">BTTS probable</span></td><td>BTTS Oui</td></tr>
+          <tr><td>16–20</td><td><span class="tag ta">Modéré</span></td><td>Over 1.5</td></tr>
+          <tr><td>20+</td><td><span class="tag tr">Fermé</span></td><td>Under 2.5</td></tr>
+        </tbody></table>
+      </div>
+      <div class="card"><div class="ch"><span>⚖️</span> Ratio 1-0/0-1 = force du favori</div>
+        <table class="tbl"><thead><tr><th>Ratio</th><th>Signal</th><th>Marché</th></tr></thead><tbody>
+          <tr><td>1.0–1.2</td><td>Équilibre parfait</td><td>Double chance</td></tr>
+          <tr><td>1.3–1.6</td><td><span class="tag ta">Légèrement favori</span></td><td>1X</td></tr>
+          <tr><td>1.7–2.4</td><td><span class="tag tg">Favori clair</span></td><td>Victoire A</td></tr>
+          <tr><td>2.5+</td><td><span class="tag tg">Domination</span></td><td>AH −0.5 / −1</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <!-- JOURNAL -->
+    <div class="page" id="m-log">
+      <div class="card">
+        <div class="ch"><span>➕</span> Ajouter un pari</div>
+        <div class="field" style="margin-bottom:8px"><label>Match</label><input type="text" id="l_match" placeholder="PSG vs Arsenal" style="font-family:var(--sans);font-size:13px;font-weight:500"></div>
+        <div class="g2" style="margin-bottom:8px">
+          <div class="field"><label>Marché</label><input type="text" id="l_mkt" placeholder="Over 2.5" style="font-family:var(--sans);font-size:13px"></div>
+          <div class="field"><label>Cote</label><input type="number" id="l_cote" value="1.90" step="0.05" min="1.01"></div>
+        </div>
+        <div class="g2">
+          <div class="field"><label>Mise (€)</label><input type="number" id="l_mise" value="10" step="5" min="1"></div>
+          <div class="field"><label>Résultat</label>
+            <select id="l_res" style="background:var(--bg);border:.5px solid var(--border2);color:var(--text);padding:9px 11px;border-radius:9px;font-family:var(--sans);font-size:13px">
+              <option value="pending">⏳ En attente</option>
+              <option value="won">✅ Gagné</option>
+              <option value="lost">❌ Perdu</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn" onclick="addPari()">Enregistrer →</button>
+      </div>
+      <div id="log-stats"></div>
+      <div id="log-list"></div>
+    </div>
+
+  </div><!-- end body manual -->
+</div><!-- end module-manual -->
+
+<!-- ====================================================
+     MODULE AUTO — sous-onglets
+     ==================================================== -->
+<div id="module-auto" style="display:none">
+  <div class="subtabs">
+    <button class="stab on" onclick="showSub('a','today',this)">📅 Matchs du jour</button>
+    <button class="stab" onclick="showSub('a','settings',this)">⚙️ Réglages API</button>
+  </div>
+
+  <div class="body">
+
+    <!-- MATCHS DU JOUR AUTO -->
+    <div class="page on" id="a-today">
+      <div class="warn">Les données sont récupérées automatiquement via API-Football et The Odds API. Configure tes clés dans Réglages.</div>
+
+      <!-- SÉLECTEUR DE DATE -->
+      <div class="card" style="padding:12px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <button class="date-btn on" id="btn-hier" onclick="setDate(-1,this)">⬅️ Hier</button>
+          <button class="date-btn on" id="btn-auj" onclick="setDate(0,this)">📅 Aujourd'hui</button>
+          <button class="date-btn" id="btn-dem" onclick="setDate(1,this)">Demain ➡️</button>
+          <button class="date-btn" id="btn-aps" onclick="setDate(2,this)">+2 jours</button>
+          <input type="date" id="custom-date" onchange="setCustomDate(this.value)"
+            style="background:var(--bg);border:.5px solid var(--border2);color:var(--text);padding:7px 10px;border-radius:9px;font-family:var(--sans);font-size:12px;flex:1;min-width:130px">
+        </div>
+        <div id="selected-date-label" style="font-size:11px;color:var(--muted);margin-top:8px;font-family:var(--mono)"></div>
+      </div>
+
+      <!-- Status API -->
+      <div id="auto-status" style="margin-bottom:12px"></div>
+
+      <!-- Filtres ligues -->
+      <div class="filter-wrap" id="league-filters" style="display:none">
+        <button class="fpill on" data-lid="all" onclick="filterLg('all',this)">Toutes</button>
+        <button class="fpill" data-lid="2" onclick="filterLg('2',this)">🏆 UCL</button>
+        <button class="fpill" data-lid="3" onclick="filterLg('3',this)">🥈 UEL</button>
+        <button class="fpill" data-lid="39" onclick="filterLg('39',this)">🏴󠁧󠁢󠁥󠁮󠁧󠁿 PL</button>
+        <button class="fpill" data-lid="140" onclick="filterLg('140',this)">🇪🇸 Liga</button>
+        <button class="fpill" data-lid="135" onclick="filterLg('135',this)">🇮🇹 Serie A</button>
+        <button class="fpill" data-lid="78" onclick="filterLg('78',this)">🇩🇪 Bundesliga</button>
+        <button class="fpill" data-lid="61" onclick="filterLg('61',this)">🇫🇷 Ligue 1</button>
+        <button class="fpill" data-lid="94" onclick="filterLg('94',this)">🇵🇹 Primeira</button>
+        <button class="fpill" data-lid="71" onclick="filterLg('71',this)">🇧🇷 Brasileirão</button>
+        <button class="fpill" data-lid="253" onclick="filterLg('253',this)">🇺🇸 MLS</button>
+        <button class="fpill" data-lid="307" onclick="filterLg('307',this)">🇸🇦 Saudi Pro</button>
+        <button class="fpill" data-lid="88" onclick="filterLg('88',this)">🇳🇱 Eredivisie</button>
+        <button class="fpill" data-lid="144" onclick="filterLg('144',this)">🇧🇪 Jupiler</button>
+      </div>
+
+      <!-- Actions -->
+      <div style="display:flex;gap:8px;margin-bottom:12px" id="auto-actions" style="display:none">
+        <button class="btn ghost sm" onclick="loadMatches()" style="flex:1">🔄 Actualiser</button>
+        <button class="btn green sm" onclick="analyseAll()" style="flex:1">⚡ Analyser tout</button>
+      </div>
+
+      <!-- Loading -->
+      <div class="loading" id="auto-loading" style="display:none">
+        <div class="loading-icon">⚙️</div>
+        <div class="loading-txt" id="auto-loading-txt">Chargement...</div>
+      </div>
+
+      <!-- Matches -->
+      <div id="auto-matches"></div>
+      <!-- Analysis results -->
+      <div id="auto-analysis"></div>
+    </div>
+
+    <!-- RÉGLAGES -->
+    <div class="page" id="a-settings">
+      <div class="rb blue" style="margin-bottom:14px">
+        <div class="rb-t blue">🔑 Clés API — stockées sur Vercel</div>
+        <div class="rb-tx">Tes clés API sont sécurisées sur le serveur Vercel, jamais exposées dans l'app. Tu n'as à les configurer qu'une seule fois dans le dashboard Vercel.</div>
+      </div>
+
+      <div class="card">
+        <div class="ch">Préférences d'affichage</div>
+        <div class="field" style="margin-bottom:9px">
+          <label>Bookmaker préféré</label>
+          <select id="cfg_bk" style="background:var(--bg);border:.5px solid var(--border2);color:var(--text);padding:9px 11px;border-radius:9px;font-family:var(--sans);font-size:13px">
+            <option value="1xbet">1xBet</option>
+            <option value="betclic">Betclic</option>
+            <option value="unibet">Unibet</option>
+            <option value="bet365">Bet365</option>
+            <option value="williamhill">William Hill</option>
+            <option value="pinnacle">Pinnacle</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Fuseau horaire</label>
+          <select id="cfg_tz" style="background:var(--bg);border:.5px solid var(--border2);color:var(--text);padding:9px 11px;border-radius:9px;font-family:var(--sans);font-size:13px">
+            <option value="Africa/Abidjan">Côte d'Ivoire (GMT)</option>
+            <option value="Africa/Dakar">Sénégal (GMT)</option>
+            <option value="Africa/Lagos">Nigeria (GMT+1)</option>
+            <option value="Africa/Nairobi">Kenya (GMT+3)</option>
+            <option value="Europe/Paris">France (GMT+1/+2)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn green" onclick="saveConfig()">💾 Sauvegarder →</button>
+      <div id="cfg-status" style="margin-top:10px"></div>
+    </div>
+
+  </div><!-- end body auto -->
+</div><!-- end module-auto -->
+
+<script>
+// ============================================================
+// UTILS
+// ============================================================
+const $ = id => document.getElementById(id);
+const fv = id => parseFloat($(id)?.value)||0;
+const sv = id => $(id)?.value?.trim()||'';
+const pct = v => v.toFixed(1)+'%';
+const fmtC = v => parseFloat(v).toFixed(2);
+const fmtP = v => (v>=0?'+':'')+v.toFixed(1)+'%';
+const fmtE = v => (v>=0?'+':'')+v.toFixed(2)+'€';
+const cG = v => v>0?'var(--green)':v<0?'var(--red)':'var(--muted)';
+
+// Date header
+$('hdr-date').textContent = new Date().toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
+
+// ============================================================
+// MODULE SWITCHING
+// ============================================================
+function switchModule(name, el){
+  document.querySelectorAll('.mod-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  $('module-manual').style.display = name==='manual'?'block':'none';
+  $('module-auto').style.display   = name==='auto'?'block':'none';
+  if(name==='auto') initAutoModule();
+}
+
+function showSub(mod, name, el){
+  const prefix = mod+'-';
+  document.querySelectorAll(`#module-${mod==='m'?'manual':'auto'} .stab`).forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll(`#module-${mod==='m'?'manual':'auto'} .page`).forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  $(prefix+name).classList.add('on');
+}
+
+// ============================================================
+// POISSON MATH
+// ============================================================
+function poissonP(k, lambda){
+  let e=Math.exp(-lambda), f=1;
+  for(let i=2;i<=k;i++) f*=i;
+  return e*Math.pow(lambda,k)/f;
+}
+function dcCorr(i,j,lA,lB,rho=-0.13){
+  if(i===0&&j===0) return 1-lA*lB*rho;
+  if(i===1&&j===0) return 1+lB*rho;
+  if(i===0&&j===1) return 1+lA*rho;
+  if(i===1&&j===1) return 1-rho;
+  return 1;
+}
+function buildMatrix(lA,lB,maxG=5){
+  let mat=[],pW=0,pD=0,pL=0;
+  for(let i=0;i<=maxG;i++){mat[i]=[];for(let j=0;j<=maxG;j++){
+    let p=poissonP(i,lA)*poissonP(j,lB)*dcCorr(i,j,lA,lB);
+    mat[i][j]=Math.max(0,p);
+    if(i>j)pW+=mat[i][j]; else if(i===j)pD+=mat[i][j]; else pL+=mat[i][j];
+  }}
+  return{mat,pW,pD,pL};
+}
+
+// ============================================================
+// ANALYSE CORE
+// ============================================================
+function analyseMatch(c1,cx,c2,ov,bt,q00,q11,q22){
+  const p1=1/c1,px=1/cx,p2=1/c2,tot=p1+px+p2;
+  const r1=p1/tot*100,rx=px/tot*100,r2=p2/tot*100,marge=(tot-1)*100;
+  const pOv=ov?1/ov*100:0,pBt=bt?1/bt*100:0;
+  const ratio=c2/c1;
+  let recs=[],conf=50,mainBet='',mainCote=0,mainCls='amber';
+
+  if(ratio>2.5){recs.push({t:'Victoire A',c:c1,cls:'tg'});conf+=20;mainBet='Victoire A';mainCote=c1;mainCls='green';}
+  else if(ratio>1.6){const dc=parseFloat((1/(1/c1+1/cx)).toFixed(2));recs.push({t:'1X Double chance',c:dc,cls:'tg'});conf+=12;mainBet='1X Double chance';mainCote=dc;mainCls='green';}
+  else if(ratio<0.65){recs.push({t:'Victoire B',c:c2,cls:'tg'});conf+=18;mainBet='Victoire B';mainCote=c2;mainCls='green';}
+  else recs.push({t:'Double chance',c:'—',cls:'ta'});
+
+  if(pOv>60){recs.push({t:'Over 2.5',c:ov,cls:'tg'});conf+=10;}
+  else if(pOv>0&&pOv<43){recs.push({t:'Under 2.5',c:'—',cls:'ta'});conf+=7;}
+  if(pBt>58){recs.push({t:'BTTS Oui',c:bt,cls:'tg'});conf+=8;}
+  else if(pBt>0&&pBt<42) recs.push({t:'BTTS Non',c:'—',cls:'ta'});
+
+  let sigs=[];
+  if(q00){
+    if(q00<8)sigs.push({t:'0-0 bas → Match très fermé',c:'red',m:'Under 1.5'});
+    else if(q00<11)sigs.push({t:'0-0 moyen → Peu de buts',c:'amber',m:'Under 2.5'});
+    else if(q00<15)sigs.push({t:'0-0 moyen-haut → 2 buts',c:'amber',m:'Over 1.5'});
+    else if(q00<20)sigs.push({t:'0-0 haut → Match ouvert',c:'green',m:'Over 2.5'});
+    else sigs.push({t:'0-0 très haut → Festival offensif',c:'green',m:'Over 3.5'});
+  }
+  if(q11){
+    if(q11<7)sigs.push({t:'1-1 bas → BTTS Oui très probable',c:'green',m:'BTTS Oui'});
+    else if(q11<9)sigs.push({t:'1-1 moyen → BTTS Oui probable',c:'green',m:'BTTS Oui'});
+    else if(q11<11)sigs.push({t:'1-1 haut → BTTS incertain',c:'amber',m:null});
+    else sigs.push({t:'1-1 très haut → BTTS Non probable',c:'red',m:'BTTS Non'});
+  }
+  if(q22){
+    if(q22<13)sigs.push({t:'2-2 entre 11-13 → Over 2.5 + BTTS confirmés',c:'green',m:'Over 2.5 + BTTS Oui'});
+    else if(q22<16)sigs.push({t:'2-2 modéré → BTTS probable',c:'green',m:'BTTS Oui'});
+    else if(q22<20)sigs.push({t:'2-2 haut → Over 1.5',c:'amber',m:'Over 1.5'});
+    else sigs.push({t:'2-2 très haut → Match fermé',c:'red',m:'Under 2.5'});
+  }
+
+  sigs.forEach(s=>{if(s.m&&!recs.find(r=>r.t===s.m))recs.push({t:s.m,c:'—',cls:s.c==='green'?'tg':s.c==='amber'?'ta':'tr'});});
+  if(Math.abs(r1-r2)>20) conf+=10;
+  if(sigs.length>=2) conf+=8;
+  conf=Math.min(88,Math.max(30,conf));
+
+  return{r1,rx,r2,marge,ratio,pOv,pBt,recs,conf,mainBet,mainCote:parseFloat(mainCote)||0,mainCls,sigs};
+}
+
+function renderAnalysis(res, matchName=''){
+  const cc=res.conf>70?'var(--green)':res.conf>55?'var(--amber)':'var(--red)';
+  return `<div class="pop">
+  ${matchName?`<div style="font-size:14px;font-weight:700;margin-bottom:12px">${matchName}</div>`:''}
+  <div class="g4" style="margin-bottom:10px">
+    <div class="met"><div class="ml">Prob A</div><div class="mv" style="color:${res.r1>res.r2?'var(--green)':'var(--text)'}">${pct(res.r1)}</div><div class="ms">cote ${fmtC(100/res.r1)}</div></div>
+    <div class="met"><div class="ml">Prob Nul</div><div class="mv">${pct(res.rx)}</div><div class="ms">cote ${fmtC(100/res.rx)}</div></div>
+    <div class="met"><div class="ml">Prob B</div><div class="mv" style="color:${res.r2>res.r1?'var(--green)':'var(--text)'}">${pct(res.r2)}</div><div class="ms">cote ${fmtC(100/res.r2)}</div></div>
+    <div class="met"><div class="ml">Marge bookie</div><div class="mv" style="color:var(--red)">${pct(res.marge)}</div><div class="ms">profit caché</div></div>
+  </div>
+
+  <div class="conf-wrap">
+    <div class="conf-lbl"><span>Confiance de l'analyse</span><span style="font-weight:700;color:${cc}">${res.conf}%</span></div>
+    <div class="conf-bar"><div class="conf-fill" style="width:${res.conf}%;background:${cc}"></div></div>
+  </div>
+
+  <div class="rb ${res.mainCls==='green'?'green':'amber'}" style="margin-top:10px">
+    <div class="rb-t ${res.mainCls==='green'?'green':'amber'}">Victoire — Ratio A/B: ${res.ratio.toFixed(2)}×</div>
+    <div style="margin:6px 0">
+      <div class="bar-row"><span>A</span><span>${pct(res.r1)}</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${res.r1}%;background:var(--green)"></div></div>
+      <div class="bar-row" style="margin-top:5px"><span>B</span><span>${pct(res.r2)}</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${res.r2}%;background:var(--red)"></div></div>
+    </div>
+  </div>
+
+  ${res.pOv?`<div class="rb ${res.pOv>55?'green':'red'}">
+    <div class="rb-t ${res.pOv>55?'green':'red'}">Buts — Over 2.5: ${pct(res.pOv)}</div>
+    <div class="rb-tx">${res.pOv>60?'<strong>Match ouvert — Over 2.5 probable</strong>':res.pOv>50?'Équilibré sur les buts':'<strong>Match fermé — Under 2.5 probable</strong>'}</div>
+  </div>`:''}
+
+  ${res.pBt?`<div class="rb ${res.pBt>55?'green':'red'}">
+    <div class="rb-t ${res.pBt>55?'green':'red'}">BTTS — Les deux marquent: ${pct(res.pBt)}</div>
+    <div class="rb-tx">${res.pBt>60?'<strong>BTTS Oui très probable</strong>':res.pBt>50?'BTTS Oui probable':'<strong>BTTS Non probable</strong>'}</div>
+  </div>`:''}
+
+  ${res.sigs.length?`<div class="rb blue">
+    <div class="rb-t blue">Signaux scores clés</div>
+    ${res.sigs.map(s=>`<div style="display:flex;gap:8px;padding:5px 0;border-bottom:.5px solid rgba(74,180,247,.15);align-items:flex-start"><div style="width:7px;height:7px;border-radius:50%;background:${s.c==='green'?'var(--green)':s.c==='amber'?'var(--amber)':'var(--red)'};flex-shrink:0;margin-top:4px"></div><div class="rb-tx">${s.t}${s.m?` → <strong>${s.m}</strong>`:''}</div></div>`).join('')}
+  </div>`:''}
+
+  <div class="rb purple">
+    <div class="rb-t purple">Sélections recommandées</div>
+    <div style="margin-bottom:5px">${res.recs.map(r=>`<span class="tag ${r.cls}">${r.t}${r.c&&r.c!=='—'?' @ '+r.c:''}</span>`).join('')}</div>
+    <div class="rb-tx" style="font-size:11px">Basé sur probabilités implicites et signaux scores. Vérifier blessés et forme avant de miser.</div>
+  </div>
+  </div>`;
+}
+
+// ============================================================
+// SESSION
+// ============================================================
+function runSession(){
+  const c1=fv('s_c1'),cx=fv('s_cx'),c2=fv('s_c2');
+  if(!c1||!cx||!c2){alert('Entre les 3 cotes 1X2 minimum');return;}
+  const res=analyseMatch(c1,cx,c2,fv('s_ov'),fv('s_bt'),fv('s_00'),fv('s_11'),fv('s_22'));
+  $('session-out').innerHTML=renderAnalysis(res);
+}
+
+// ============================================================
+// DÉCODEUR
+// ============================================================
+function runDecoder(){
+  const c1=fv('d_c1'),cx=fv('d_cx'),c2=fv('d_c2');
+  const p1=1/c1,px=1/cx,p2=1/c2,tot=p1+px+p2;
+  const r1=p1/tot*100,rx=px/tot*100,r2=p2/tot*100,marge=(tot-1)*100;
+  const pOv=1/fv('d_ov')*100,pBty=1/fv('d_by')*100;
+  const q00=fv('d_00'),q11=fv('d_11'),q22=fv('d_22');
+  const ratio=c2/c1;
+  let sig00='',sig11='',sig22='';
+  if(q00<8)sig00='Très fermé';else if(q00<11)sig00='Peu de buts';else if(q00<15)sig00='2 buts';else if(q00<20)sig00='Match ouvert';else sig00='Très ouvert';
+  if(q11<7)sig11='BTTS fort';else if(q11<9)sig11='BTTS probable';else if(q11<11)sig11='Incertain';else sig11='BTTS Non';
+  if(q22<13)sig22='Over 2.5 + BTTS confirmés';else if(q22<16)sig22='BTTS probable';else if(q22<20)sig22='Modéré';else sig22='Fermé';
+
+  $('decoder-out').innerHTML=`<div class="pop">
+  <div class="g3" style="margin-bottom:10px">
+    <div class="met"><div class="ml">Prob réelle A</div><div class="mv" style="color:${r1>r2?'var(--green)':'var(--text)'}">${pct(r1)}</div><div class="ms">cote juste ${fmtC(100/r1)}</div></div>
+    <div class="met"><div class="ml">Prob réelle nul</div><div class="mv">${pct(rx)}</div><div class="ms">cote juste ${fmtC(100/rx)}</div></div>
+    <div class="met"><div class="ml">Prob réelle B</div><div class="mv" style="color:${r2>r1?'var(--green)':'var(--text)'}">${pct(r2)}</div><div class="ms">cote juste ${fmtC(100/r2)}</div></div>
+    <div class="met"><div class="ml">Marge bookie</div><div class="mv" style="color:var(--red)">${pct(marge)}</div></div>
+    <div class="met"><div class="ml">Over 2.5</div><div class="mv" style="color:${pOv>55?'var(--green)':'var(--red)'}">${pct(pOv)}</div></div>
+    <div class="met"><div class="ml">BTTS Oui</div><div class="mv" style="color:${pBty>55?'var(--green)':'var(--red)'}">${pct(pBty)}</div></div>
+  </div>
+  <div class="rb blue">
+    <div class="rb-t blue">Signaux scores clés</div>
+    <div class="row"><span class="rl">0-0 (cote ${q00})</span><span class="rv">${sig00}</span></div>
+    <div class="row"><span class="rl">1-1 (cote ${q11})</span><span class="rv">${sig11}</span></div>
+    <div class="row"><span class="rl">2-2 (cote ${q22})</span><span class="rv">${sig22}</span></div>
+    <div class="row"><span class="rl">Ratio 1-0/0-1</span><span class="rv">${ratio.toFixed(2)}×</span></div>
+  </div>
+  </div>`;
+}
+
+// ============================================================
+// SCORES EXACTS
+// ============================================================
+function runScores(){
+  const defs=[
+    {id:'e_10',l:'1-0',a:true},{id:'e_01',l:'0-1',b:true},{id:'e_20',l:'2-0',a:true},
+    {id:'e_02',l:'0-2',b:true},{id:'e_21',l:'2-1',a:true},{id:'e_12',l:'1-2',b:true},
+    {id:'e_11',l:'1-1',n:true},{id:'e_00',l:'0-0',n:true},{id:'e_30',l:'3-0',a:true},
+    {id:'e_03',l:'0-3',b:true},{id:'e_31',l:'3-1',a:true},{id:'e_22',l:'2-2',n:true},
+    {id:'e_32',l:'3-2',a:true},{id:'e_40',l:'4-0',a:true},{id:'e_41',l:'4-1',a:true},{id:'e_33',l:'3-3',n:true},
+  ];
+  let pA=0,pB=0,pN=0,pOv25=0,all=[];
+  defs.forEach(d=>{const v=fv(d.id);if(!v)return;const p=1/v*100;all.push({...d,c:v,p});
+    if(d.a)pA+=p;if(d.b)pB+=p;if(d.n)pN+=p;
+    const g=parseInt(d.l.split('-')[0])+parseInt(d.l.split('-')[1]);
+    if(g>=3)pOv25+=p;
+  });
+  if(!all.length){alert('Entre au moins quelques cotes');return;}
+  all.sort((a,b)=>a.c-b.c);
+  $('scores-out').innerHTML=`<div class="pop">
+  <div class="g4" style="margin-bottom:10px">
+    <div class="met"><div class="ml">Victoire A</div><div class="mv" style="color:var(--green)">${pA.toFixed(1)}%</div></div>
+    <div class="met"><div class="ml">Victoire B</div><div class="mv" style="color:var(--red)">${pB.toFixed(1)}%</div></div>
+    <div class="met"><div class="ml">Nul</div><div class="mv">${pN.toFixed(1)}%</div></div>
+    <div class="met"><div class="ml">Over 2.5</div><div class="mv" style="color:${pOv25>50?'var(--green)':'var(--red)'}">${pOv25.toFixed(1)}%</div></div>
+  </div>
+  <div class="rb green"><div class="rb-t green">Score le plus probable</div>
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="font-family:var(--mono);font-size:36px;font-weight:700">${all[0].l}</div>
+      <div><div class="rb-tx">Cote : <strong>${all[0].c}</strong></div><div class="rb-tx">Prob : <strong style="color:var(--green)">${all[0].p.toFixed(1)}%</strong></div></div>
+    </div>
+  </div>
+  <div class="sg">${all.slice(0,12).map((s,i)=>`
+    <div class="sc ${i===0?'best':i<3?'good':''}">
+      <div class="sc-s" style="color:${s.a?'var(--green)':s.b?'var(--red)':'var(--blue)'}">${s.l}</div>
+      <div class="sc-c">${s.c}</div>
+      <div class="sc-p" style="color:${i===0?'var(--green)':i<3?'var(--amber)':'var(--muted)'}">${s.p.toFixed(1)}%</div>
+    </div>`).join('')}
+  </div></div>`;
+}
+
+// ============================================================
+// POISSON
+// ============================================================
+function runPoisson(){
+  const am=fv('p_am'),ac=fv('p_ac'),bm=fv('p_bm'),bc=fv('p_bc'),ld=fv('p_ld'),le=fv('p_le');
+  const lA=(am/ld)*(bc/le)*ld,lB=(bm/le)*(ac/ld)*le;
+  const{mat,pW,pD,pL}=buildMatrix(lA,lB);
+  let arr=[];
+  for(let i=0;i<=5;i++)for(let j=0;j<=5;j++)arr.push({s:`${i}-${j}`,p:mat[i][j]});
+  arr.sort((a,b)=>b.p-a.p);
+  const pOv25=arr.filter(s=>parseInt(s.s[0])+parseInt(s.s[2])>=3).reduce((a,s)=>a+s.p,0);
+  const pBtts=arr.filter(s=>parseInt(s.s[0])>0&&parseInt(s.s[2])>0).reduce((a,s)=>a+s.p,0);
+  $('poisson-out').innerHTML=`<div class="pop">
+  <div class="g4" style="margin-bottom:10px">
+    <div class="met"><div class="ml">λ A</div><div class="mv" style="color:var(--blue)">${lA.toFixed(2)}</div></div>
+    <div class="met"><div class="ml">λ B</div><div class="mv" style="color:var(--blue)">${lB.toFixed(2)}</div></div>
+    <div class="met"><div class="ml">Total buts</div><div class="mv">${(lA+lB).toFixed(2)}</div></div>
+    <div class="met"><div class="ml">Over 2.5</div><div class="mv" style="color:${pOv25>0.5?'var(--green)':'var(--red)'}">${pct(pOv25*100)}</div></div>
+  </div>
+  <div class="g3" style="margin-bottom:10px">
+    <div class="met"><div class="ml">Victoire A</div><div class="mv" style="color:var(--green)">${pct(pW*100)}</div><div class="ms">cote juste ${fmtC(1/pW)}</div></div>
+    <div class="met"><div class="ml">Nul</div><div class="mv">${pct(pD*100)}</div><div class="ms">cote juste ${fmtC(1/pD)}</div></div>
+    <div class="met"><div class="ml">Victoire B</div><div class="mv" style="color:var(--red)">${pct(pL*100)}</div><div class="ms">cote juste ${fmtC(1/pL)}</div></div>
+  </div>
+  <div class="rb green"><div class="rb-t green">Top 8 scores — Poisson + Dixon-Coles</div>
+    <div class="sg">${arr.slice(0,8).map((s,i)=>`
+      <div class="sc ${i===0?'best':i<3?'good':''}">
+        <div class="sc-s">${s.s}</div>
+        <div class="sc-p" style="color:${i===0?'var(--green)':i<3?'var(--amber)':'var(--muted)'}">${pct(s.p*100)}</div>
+        <div class="sc-c">${fmtC(1/s.p)}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div class="rb blue"><div class="rb-t blue">BTTS</div>
+    <div class="rb-tx">Probabilité BTTS Oui : <strong style="color:${pBtts>0.55?'var(--green)':'var(--red)'}">${pct(pBtts*100)}</strong></div>
+  </div></div>`;
+}
+
+// ============================================================
+// VALUE BET
+// ============================================================
+(function buildEVRef(){
+  const cotes=[1.30,1.50,1.75,2.00,2.25,2.50,3.00,4.00,5.00,8.00,10.00];
+  $('ev-ref').innerHTML=cotes.map(c=>`<tr>
+    <td>${c.toFixed(2)}</td>
+    <td>${(1/c*100).toFixed(1)}%</td>
+    <td style="color:var(--amber)">${(1/c*1.05*100).toFixed(1)}%</td>
+    <td style="color:var(--green)">${(1/c*1.10*100).toFixed(1)}%</td>
+  </tr>`).join('');
+})();
+
+function runEV(){
+  const cote=fv('v_cote'),prob=fv('v_prob')/100,mise=fv('v_mise');
+  const ev=(prob*cote-1)*100,evE=prob*(cote-1)*mise-(1-prob)*mise;
+  let cls='amber',verdict='',conseil='';
+  if(ev>=20){cls='green';verdict='Value exceptionnelle';conseil='Mise jusqu\'à 4% bankroll';}
+  else if(ev>=15){cls='green';verdict='Forte value';conseil='Mise jusqu\'à 3% bankroll';}
+  else if(ev>=10){cls='green';verdict='Bonne value';conseil='Mise jusqu\'à 2% bankroll';}
+  else if(ev>=5){cls='amber';verdict='Value correcte';conseil='Mise 1% bankroll';}
+  else if(ev>=0){cls='amber';verdict='Neutre';conseil='Évite ou mise minimum';}
+  else{cls='red';verdict='Pas de value — pari perdant';conseil='Ne pas jouer';}
+  $('ev-out').innerHTML=`<div class="pop">
+  <div class="g3" style="margin-bottom:10px">
+    <div class="met"><div class="ml">Prob implicite</div><div class="mv">${(1/cote*100).toFixed(1)}%</div></div>
+    <div class="met"><div class="ml">Cote juste (toi)</div><div class="mv" style="color:var(--accent)">${fmtC(1/prob)}</div></div>
+    <div class="met"><div class="ml">EV</div><div class="mv" style="color:${cG(ev)}">${fmtP(ev)}</div></div>
+    <div class="met"><div class="ml">Gain si gagné</div><div class="mv" style="color:var(--green)">+${((cote-1)*mise).toFixed(2)}€</div></div>
+    <div class="met"><div class="ml">Perte si perdu</div><div class="mv" style="color:var(--red)">-${mise.toFixed(2)}€</div></div>
+    <div class="met"><div class="ml">EV en euros</div><div class="mv" style="color:${cG(evE)}">${fmtE(evE)}</div></div>
+  </div>
+  <div class="rb ${cls}"><div class="rb-t ${cls}">${verdict}</div><div class="rb-tx"><strong>${conseil}</strong></div></div>
+  </div>`;
+}
+
+// ============================================================
+// KELLY
+// ============================================================
+function runKelly(){
+  const bk=fv('k_bk'),cote=fv('k_cote'),prob=fv('k_prob')/100;
+  const b=cote-1,k=Math.max(0,(b*prob-(1-prob))/b),kq=k*0.25;
+  const ev=(prob*cote-1)*100;
+  $('kelly-out').innerHTML=`<div class="pop">
+  <div class="g3" style="margin-bottom:10px">
+    <div class="met"><div class="ml">Kelly plein</div><div class="mv" style="color:var(--red)">${(k*bk).toFixed(2)}€</div><div class="ms">${(k*100).toFixed(1)}%</div></div>
+    <div class="met"><div class="ml">Kelly ¼ (conseillé)</div><div class="mv" style="color:var(--green)">${(kq*bk).toFixed(2)}€</div><div class="ms">${(kq*100).toFixed(1)}%</div></div>
+    <div class="met"><div class="ml">EV</div><div class="mv" style="color:${cG(ev)}">${fmtP(ev)}</div></div>
+  </div>
+  <div class="rb ${ev>5?'green':ev>0?'amber':'red'}"><div class="rb-t ${ev>5?'green':ev>0?'amber':'red'}">${ev>5?'Pari avec value':ev>0?'Marginal':'EV négatif — ne pas jouer'}</div>
+    <div class="rb-tx"><strong>Mise optimale : ${(kq*bk).toFixed(2)}€</strong></div>
+  </div></div>`;
+}
+
+// ============================================================
+// JOURNAL
+// ============================================================
+let paris=JSON.parse(localStorage.getItem('oddsiq_paris')||'[]');
+function addPari(){
+  const match=sv('l_match'),mkt=sv('l_mkt'),cote=fv('l_cote'),mise=fv('l_mise'),res=$('l_res').value;
+  if(!match||!mkt){alert('Match et marché requis');return;}
+  paris.push({id:Date.now(),match,mkt,cote,mise,res,date:new Date().toLocaleDateString('fr-FR')});
+  saveParis();
+  $('l_match').value='';
+}
+function updateRes(id,v){paris=paris.map(p=>p.id===id?{...p,res:v}:p);saveParis();}
+function delPari(id){paris=paris.filter(p=>p.id!==id);saveParis();}
+function saveParis(){localStorage.setItem('oddsiq_paris',JSON.stringify(paris));renderLog();}
+function renderLog(){
+  const won=paris.filter(p=>p.res==='won'),lost=paris.filter(p=>p.res==='lost');
+  const gain=won.reduce((a,p)=>a+(p.mise*(p.cote-1)),0),perte=lost.reduce((a,p)=>a+p.mise,0);
+  const tm=paris.reduce((a,p)=>a+p.mise,0),roi=tm>0?(gain-perte)/tm*100:0;
+  if(paris.length) $('log-stats').innerHTML=`<div class="g4" style="margin-bottom:10px">
+    <div class="met"><div class="ml">Total</div><div class="mv">${paris.length}</div></div>
+    <div class="met"><div class="ml">Gagnés</div><div class="mv" style="color:var(--green)">${won.length}</div></div>
+    <div class="met"><div class="ml">Perdus</div><div class="mv" style="color:var(--red)">${lost.length}</div></div>
+    <div class="met"><div class="ml">ROI</div><div class="mv" style="color:${cG(roi)}">${fmtP(roi)}</div></div>
+  </div>`;
+  $('log-list').innerHTML=paris.length?paris.slice().reverse().map(p=>`
+    <div class="pari">
+      <div style="flex:1"><div style="font-size:13px;font-weight:600">${p.match}</div>
+        <div style="font-size:11px;color:var(--muted)">${p.mkt} · ${p.cote} · ${p.mise}€ · ${p.date}</div></div>
+      <div style="display:flex;align-items:center;gap:7px">
+        <select onchange="updateRes(${p.id},this.value)" style="background:var(--bg);border:.5px solid var(--border2);color:var(--text);padding:5px 7px;border-radius:7px;font-size:11px">
+          <option value="pending" ${p.res==='pending'?'selected':''}>⏳</option>
+          <option value="won" ${p.res==='won'?'selected':''}>✅</option>
+          <option value="lost" ${p.res==='lost'?'selected':''}>❌</option>
+        </select>
+        <span style="font-family:var(--mono);font-size:13px;font-weight:700;color:${p.res==='won'?'var(--green)':p.res==='lost'?'var(--red)':'var(--muted)'};min-width:50px;text-align:right">
+          ${p.res==='won'?'+'+((p.mise*(p.cote-1)).toFixed(2))+'€':p.res==='lost'?'-'+p.mise+'€':'?'}</span>
+        <button onclick="delPari(${p.id})" style="background:transparent;border:none;color:var(--dim);cursor:pointer;font-size:18px">×</button>
+      </div>
+    </div>`).join(''):'<div style="text-align:center;color:var(--muted);padding:30px;font-size:13px">Aucun pari enregistré</div>';
+}
+renderLog();
+
+// ============================================================
+// DATE MANAGEMENT
+// ============================================================
+let selectedDate = new Date().toISOString().split('T')[0]; // today by default
+
+function getDateStr(offsetDays){
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return d.toISOString().split('T')[0];
+}
+
+function getDateLabel(dateStr){
+  const today = new Date().toISOString().split('T')[0];
+  const tom   = getDateStr(1);
+  const yest  = getDateStr(-1);
+  const d2    = getDateStr(2);
+  if(dateStr===today) return 'Aujourd\'hui — '+new Date(dateStr+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  if(dateStr===tom)   return 'Demain — '+new Date(dateStr+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  if(dateStr===yest)  return 'Hier — '+new Date(dateStr+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  return new Date(dateStr+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+
+function setDate(offset, el){
+  selectedDate = getDateStr(offset);
+  $('custom-date').value = selectedDate;
+  document.querySelectorAll('.date-btn').forEach(b=>b.classList.remove('on'));
+  if(el) el.classList.add('on');
+  updateDateLabel();
+  loadMatches();
+}
+
+function setCustomDate(val){
+  if(!val) return;
+  selectedDate = val;
+  document.querySelectorAll('.date-btn').forEach(b=>b.classList.remove('on'));
+  updateDateLabel();
+  loadMatches();
+}
+
+function updateDateLabel(){
+  const el = $('selected-date-label');
+  if(el) el.textContent = '📅 '+getDateLabel(selectedDate);
+}
+
+// Init date
+(function(){
+  const today = new Date().toISOString().split('T')[0];
+  $('custom-date').value = today;
+  // Mark today button as active
+  document.querySelectorAll('.date-btn').forEach(b=>b.classList.remove('on'));
+  const btnAuj = $('btn-auj');
+  if(btnAuj) btnAuj.classList.add('on');
+  updateDateLabel();
+})();
+
+
+function getCfg(){
+  return {
+    bk: localStorage.getItem('oiq_bk')||'1xbet',
+    tz: localStorage.getItem('oiq_tz')||'Africa/Abidjan'
+  };
+}
+
+function saveConfig(){
+  localStorage.setItem('oiq_bk', $('cfg_bk').value);
+  localStorage.setItem('oiq_tz', $('cfg_tz').value);
+  $('cfg-status').innerHTML='<div class="rb green"><div class="rb-t green">✅ Sauvegardé</div><div class="rb-tx">Préférences enregistrées.</div></div>';
+  showSub('a','today', document.querySelector('#module-auto .stab'));
+  loadMatches();
+}
+
+function initAutoModule(){
+  const cfg = getCfg();
+  if($('cfg_bk')) $('cfg_bk').value = cfg.bk;
+  if($('cfg_tz')) $('cfg_tz').value = cfg.tz;
+  if(!liveMatches.length) loadMatches();
+  else renderMatches();
+}
+
+// ============================================================
+// MODULE AUTO — CHARGEMENT MATCHS
+// ============================================================
+let liveMatches=[];
+let filteredLive=[];
+let curLeague='all';
+
+const LEAGUES_MAP={
+  '2':'Champions League 🏆','3':'Europa League 🥈','39':'Premier League 🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+  '140':'La Liga 🇪🇸','135':'Serie A 🇮🇹','78':'Bundesliga 🇩🇪',
+  '61':'Ligue 1 🇫🇷','94':'Primeira Liga 🇵🇹','71':'Brasileirão 🇧🇷',
+  '253':'MLS 🇺🇸','307':'Saudi Pro League 🇸🇦','88':'Eredivisie 🇳🇱','144':'Jupiler Pro 🇧🇪'
+};
+
+const ODDS_MAP={
+  '39':'soccer_england_league1','140':'soccer_spain_la_liga','135':'soccer_italy_serie_a',
+  '78':'soccer_germany_bundesliga','61':'soccer_france_ligue_one',
+  '2':'soccer_uefa_champs_league','3':'soccer_uefa_europa_league'
+};
+
+function showLoading(txt){$('auto-loading').style.display='block';$('auto-loading-txt').textContent=txt;}
+function hideLoading(){$('auto-loading').style.display='none';}
+function showStatus(cls,title,txt){$('auto-status').innerHTML=`<div class="rb ${cls}"><div class="rb-t ${cls}">${title}</div><div class="rb-tx">${txt}</div></div>`;}
+
+// football-data.org league IDs mapping
+const FD_LEAGUES = {
+  'CL' : {name:'Champions League 🏆',   lid:'2'},
+  'EL' : {name:'Europa League 🥈',      lid:'3'},
+  'PL' : {name:'Premier League 🏴󠁧󠁢󠁥󠁮󠁧󠁿', lid:'39'},
+  'PD' : {name:'La Liga 🇪🇸',           lid:'140'},
+  'SA' : {name:'Serie A 🇮🇹',           lid:'135'},
+  'BL1': {name:'Bundesliga 🇩🇪',        lid:'78'},
+  'FL1': {name:'Ligue 1 🇫🇷',           lid:'61'},
+  'PPL': {name:'Primeira Liga 🇵🇹',     lid:'94'},
+  'DED': {name:'Eredivisie 🇳🇱',        lid:'88'},
+  'BSA': {name:'Brasileirão 🇧🇷',       lid:'71'},
+  'MLS': {name:'MLS 🇺🇸',              lid:'253'},
+};
+
+async function loadMatches(){
+  const cfg = getCfg();
+  $('auto-matches').innerHTML = '';
+  $('auto-analysis').innerHTML = '';
+  showLoading(`Récupération des matchs — ${getDateLabel(selectedDate)}...`);
+
+  try {
+    // Appel au proxy Vercel — pas de problème CORS
+    const res = await fetch(`/api/matches?date=${selectedDate}`);
+
+    if(res.status === 500) throw new Error('Clés API non configurées sur Vercel. Voir guide Réglages.');
+    if(!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || `Erreur ${res.status}`);
+    }
+
+    const data = await res.json();
+    const matches = data.matches || [];
+
+    if(!matches.length){
+      hideLoading();
+      showStatus('amber', `Aucun match le ${getDateLabel(selectedDate)}`, 'Pas de matchs dans les ligues supportées ce jour. Essaie une autre date.');
+      $('league-filters').style.display = 'flex';
+      $('auto-actions').style.display = 'flex';
+      liveMatches = [];
+      filterLg('all');
+      return;
+    }
+
+    // Mapping football-data.org → format interne
+    liveMatches = matches.map(m => {
+      const comp = FD_LEAGUES[m.competition?.code] || {name: m.competition?.name||'?', lid:'0'};
+      const matchDate = new Date(m.utcDate);
+      const timeStr = matchDate.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', timeZone: cfg.tz||'Africa/Abidjan'});
+      const isFinished = ['FINISHED','AWARDED'].includes(m.status);
+      const isLive = ['IN_PLAY','PAUSED','HALF_TIME'].includes(m.status);
+      return {
+        id: m.id,
+        lid: comp.lid,
+        league: comp.name,
+        home: m.homeTeam?.shortName || m.homeTeam?.name || '?',
+        away: m.awayTeam?.shortName || m.awayTeam?.name || '?',
+        homeFull: m.homeTeam?.name || '?',
+        awayFull: m.awayTeam?.name || '?',
+        time: timeStr,
+        status: m.status,
+        isFinished, isLive,
+        score: isFinished ? `${m.score?.fullTime?.home ?? '?'}-${m.score?.fullTime?.away ?? '?'}` : null,
+        liveScore: isLive ? `${m.score?.fullTime?.home ?? 0}-${m.score?.fullTime?.away ?? 0}` : null,
+        c1:0, cx:0, c2:0, ov:0, bt:0, hasOdds:false
+      };
+    });
+
+    showLoading(`${liveMatches.length} matchs trouvés — Chargement des cotes...`);
+    await loadOdds(cfg.bk);
+
+    hideLoading();
+    const withOdds = liveMatches.filter(m => m.hasOdds).length;
+    showStatus('green',
+      `✅ ${liveMatches.length} matchs — ${getDateLabel(selectedDate)}`,
+      `${withOdds} avec cotes ${cfg.bk} · ${liveMatches.length - withOdds} sans cotes disponibles`
+    );
+    $('league-filters').style.display = 'flex';
+    $('auto-actions').style.display = 'flex';
+    filterLg('all');
+
+  } catch(err) {
+    hideLoading();
+    showStatus('red', '❌ Erreur', err.message);
+    loadDemoData();
+  }
+}
+
+  try {
+    // football-data.org: fetch matches for selected date
+    // dateFrom and dateTo = same day to get just that day
+    const dateFrom = selectedDate;
+    const dateTo   = selectedDate;
+
+    // Fetch all competitions in one call using competitions filter
+    const compCodes = Object.keys(FD_LEAGUES).join(',');
+    const url = `https://api.football-data.org/v4/matches?dateFrom=${dateFrom}&dateTo=${dateTo}&competitions=${compCodes}`;
+
+    const res = await fetch(url, {
+      headers: { 'X-Auth-Token': cfg.kf }
+    });
+
+    if(res.status === 403) throw new Error('Clé football-data.org invalide ou expirée. Va sur football-data.org pour vérifier.');
+    if(res.status === 429) throw new Error('Limite de requêtes atteinte (10/min). Attends 1 minute et réessaie.');
+    if(!res.ok) throw new Error(`Erreur API (${res.status}). Vérifie ta clé dans Réglages.`);
+
+    const data = await res.json();
+    const matches = data.matches || [];
+
+    if(!matches.length){
+      hideLoading();
+      showStatus('amber', `Aucun match le ${getDateLabel(selectedDate)}`, 'Essaie une autre date ou vérifie ta connexion.');
+      $('league-filters').style.display = 'flex';
+      $('auto-actions').style.display = 'flex';
+      liveMatches = [];
+      filterLg('all');
+      return;
+    }
+
+    // Map football-data.org format to our internal format
+    liveMatches = matches.map(m => {
+      const comp = FD_LEAGUES[m.competition?.code] || {name: m.competition?.name||'?', lid:'0'};
+      const matchDate = new Date(m.utcDate);
+      // Adjust to user timezone (simple offset for Africa/Abidjan = UTC+0)
+      const timeStr = matchDate.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', timeZone: cfg.tz||'Africa/Abidjan'});
+      const isFinished = ['FINISHED','AWARDED'].includes(m.status);
+      const isLive = ['IN_PLAY','PAUSED','HALF_TIME'].includes(m.status);
+      return {
+        id: m.id,
+        lid: comp.lid,
+        league: comp.name,
+        home: m.homeTeam?.shortName || m.homeTeam?.name || '?',
+        away: m.awayTeam?.shortName || m.awayTeam?.name || '?',
+        homeFull: m.homeTeam?.name || '?',
+        awayFull: m.awayTeam?.name || '?',
+        time: timeStr,
+        status: m.status,
+        isFinished,
+        isLive,
+        score: isFinished ? `${m.score?.fullTime?.home ?? '?'}-${m.score?.fullTime?.away ?? '?'}` : null,
+        liveScore: isLive ? `${m.score?.fullTime?.home ?? 0}-${m.score?.fullTime?.away ?? 0}` : null,
+        c1: 0, cx: 0, c2: 0, ov: 0, bt: 0, hasOdds: false
+      };
+    });
+
+    showLoading(`${liveMatches.length} matchs trouvés — Chargement des cotes ${cfg.bk}...`);
+    await loadOdds(cfg.ko, cfg.bk);
+
+    hideLoading();
+    const withOdds = liveMatches.filter(m => m.hasOdds).length;
+    showStatus('green',
+      `✅ ${liveMatches.length} matchs — ${getDateLabel(selectedDate)}`,
+      `${withOdds} avec cotes ${cfg.bk} · ${liveMatches.length - withOdds} sans cotes disponibles`
+    );
+    $('league-filters').style.display = 'flex';
+    $('auto-actions').style.display = 'flex';
+    filterLg('all');
+
+  } catch(err) {
+    hideLoading();
+    showStatus('red', '❌ Erreur', err.message);
+    // Fallback demo data
+    loadDemoData();
+  }
+}
+
+async function loadOdds(bk){
+  const sports = [...new Set(Object.values(ODDS_MAP))];
+  for(const sport of sports){
+    try{
+      // Appel au proxy Vercel
+      const r = await fetch(`/api/odds?sport=${sport}&bookmaker=${bk}`);
+      if(!r.ok) continue;
+      const games = await r.json();
+      if(!Array.isArray(games)) continue;
+      games.forEach(game => {
+        const bookie = game.bookmakers?.[0];
+        if(!bookie) return;
+        const h2h = bookie.markets?.find(m => m.key==='h2h');
+        const tots = bookie.markets?.find(m => m.key==='totals');
+        const match = liveMatches.find(m => {
+          const hn = m.home.toLowerCase(), an = m.away.toLowerCase();
+          const ghn = game.home_team.toLowerCase(), gan = game.away_team.toLowerCase();
+          return (hn.includes(ghn.split(' ')[0]) || ghn.includes(hn.split(' ')[0])) &&
+                 (an.includes(gan.split(' ')[0]) || gan.includes(an.split(' ')[0]));
+        });
+        if(match && h2h){
+          const home = h2h.outcomes?.find(o => o.name===game.home_team || o.name==='Home');
+          const draw = h2h.outcomes?.find(o => o.name==='Draw');
+          const away = h2h.outcomes?.find(o => o.name===game.away_team || o.name==='Away');
+          if(home) match.c1 = home.price;
+          if(draw) match.cx = draw.price;
+          if(away) match.c2 = away.price;
+          if(tots){ const ov = tots.outcomes?.find(o => o.name==='Over' && Math.abs((o.point||2.5)-2.5)<0.1); if(ov) match.ov = ov.price; }
+          if(match.c1 && match.cx && match.c2) match.hasOdds = true;
+        }
+      });
+    }catch(e){ continue; }
+  }
+}
+
+function loadDemoData(){
+  liveMatches=[
+    {id:1,lid:'2',league:'Champions League 🏆',home:'Real Madrid',away:'Man City',time:'21:00',status:'NS',c1:2.40,cx:3.20,c2:2.90,ov:1.85,bt:1.70,hasOdds:true},
+    {id:2,lid:'2',league:'Champions League 🏆',home:'PSG',away:'Arsenal',time:'21:00',status:'NS',c1:2.10,cx:3.40,c2:3.30,ov:1.80,bt:1.75,hasOdds:true},
+    {id:3,lid:'39',league:'Premier League 🏴󠁧󠁢󠁥󠁮󠁧󠁿',home:'Liverpool',away:'Chelsea',time:'17:30',status:'NS',c1:1.85,cx:3.50,c2:4.20,ov:1.75,bt:1.65,hasOdds:true},
+    {id:4,lid:'140',league:'La Liga 🇪🇸',home:'Barcelona',away:'Atletico',time:'20:00',status:'NS',c1:1.75,cx:3.60,c2:4.50,ov:1.90,bt:1.80,hasOdds:true},
+    {id:5,lid:'78',league:'Bundesliga 🇩🇪',home:'Bayern',away:'Dortmund',time:'18:30',status:'NS',c1:1.60,cx:3.80,c2:5.50,ov:1.65,bt:1.60,hasOdds:true},
+    {id:6,lid:'135',league:'Serie A 🇮🇹',home:'Inter',away:'AC Milan',time:'20:45',status:'NS',c1:2.00,cx:3.20,c2:3.80,ov:1.95,bt:1.85,hasOdds:true},
+  ];
+  $('league-filters').style.display='flex';
+  $('auto-actions').style.display='flex';
+  showStatus('amber','Mode démo','Données exemples. Configure tes clés dans Réglages pour les vrais matchs.');
+  filterLg('all');
+}
+
+function filterLg(lid,el){
+  curLeague=lid;
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('on'));
+  if(el) el.classList.add('on');
+  else{const p=document.querySelector(`[data-lid="${lid}"]`);if(p)p.classList.add('on');}
+  filteredLive=lid==='all'?liveMatches:liveMatches.filter(m=>m.lid===lid);
+  renderMatches();
+}
+
+function renderMatches(){
+  if(!filteredLive.length){$('auto-matches').innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">Aucun match pour cette ligue aujourd\'hui</div>';return;}
+  const byLeague={};
+  filteredLive.forEach(m=>{if(!byLeague[m.league])byLeague[m.league]=[];byLeague[m.league].push(m);});
+  let html='';
+  Object.entries(byLeague).forEach(([league,matches])=>{
+    html+=`<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;padding:8px 0 5px">${league}</div>`;
+    matches.forEach(m=>{
+      const p1=m.c1?(1/m.c1*100).toFixed(0):'—',px=m.cx?(1/m.cx*100).toFixed(0):'—',p2=m.c2?(1/m.c2*100).toFixed(0):'—',pOv=m.ov?(1/m.ov*100).toFixed(0):'—';
+      const fcA=m.c1&&m.c2?(m.c1<=m.c2?'var(--green)':'var(--muted)'):'var(--muted)';
+      const fcB=m.c1&&m.c2?(m.c2<m.c1?'var(--green)':'var(--muted)'):'var(--muted)';
+      html+=`<div class="mc ${m.hasOdds?'with-odds':''}" id="mc-${m.id}">
+        <div class="mc-league">${m.time} ${m.score?'· FT '+m.score:m.status==='1H'||m.status==='2H'?'· EN COURS':''}</div>
+        <div class="mc-teams">
+          <div class="mc-team" style="color:${fcA}">${m.home}</div>
+          <div class="mc-vs">${m.score||'VS'}</div>
+          <div class="mc-team b" style="color:${fcB}">${m.away}</div>
+        </div>
+        ${m.hasOdds?`<div class="odds-strip">
+          <div class="odd"><div class="odd-l">1</div><div class="odd-v" style="color:${m.c1&&m.c1<=m.c2&&m.c1<=m.cx?'var(--green)':'var(--text)'}">${m.c1}</div><div class="odd-p">${p1}%</div></div>
+          <div class="odd"><div class="odd-l">X</div><div class="odd-v">${m.cx}</div><div class="odd-p">${px}%</div></div>
+          <div class="odd"><div class="odd-l">2</div><div class="odd-v" style="color:${m.c2&&m.c2<m.c1&&m.c2<m.cx?'var(--green)':'var(--text)'}">${m.c2}</div><div class="odd-p">${p2}%</div></div>
+          ${m.ov?`<div class="odd"><div class="odd-l">Ov2.5</div><div class="odd-v" style="color:${parseFloat(pOv)>55?'var(--green)':'var(--text)'}">${m.ov}</div><div class="odd-p">${pOv}%</div></div>`:''}
+        </div>
+        <button class="analyse-btn" onclick="analyseOne(${m.id})">⚡ Analyser ce match</button>`
+        :`<div style="font-size:11px;color:var(--dim);margin-top:6px">Cotes indisponibles · <span style="color:var(--accent);cursor:pointer" onclick="addManualOdds(${m.id})">Entrer manuellement</span></div>`}
+        <div class="sig-strip" id="sig-${m.id}"></div>
+      </div>`;
+    });
+  });
+  $('auto-matches').innerHTML=html;
+}
+
+function analyseOne(id){
+  const m=liveMatches.find(x=>x.id===id);
+  if(!m||!m.c1) return;
+  const res=analyseMatch(m.c1,m.cx,m.c2,m.ov,m.bt,0,0,0);
+  const sigEl=$('sig-'+id);
+  if(sigEl) sigEl.innerHTML=res.recs.map(r=>`<span class="tag ${r.cls}">${r.t}${r.c&&r.c!=='—'?' @ '+r.c:''}</span>`).join('');
+}
+
+function addManualOdds(id){
+  const m=liveMatches.find(x=>x.id===id);if(!m)return;
+  const c1=prompt(`Cote 1 (${m.home}):`);
+  const cx=prompt('Cote X (Nul):');
+  const c2=prompt(`Cote 2 (${m.away}):`);
+  const ov=prompt('Cote Over 2.5 (optionnel):');
+  if(c1&&cx&&c2){m.c1=parseFloat(c1);m.cx=parseFloat(cx);m.c2=parseFloat(c2);if(ov)m.ov=parseFloat(ov);m.hasOdds=true;renderMatches();}
+}
+
+function analyseAll(){
+  const toA=filteredLive.filter(m=>m.hasOdds);
+  if(!toA.length){alert('Aucun match avec cotes à analyser');return;}
+  const results=toA.map(m=>{const r=analyseMatch(m.c1,m.cx,m.c2,m.ov,m.bt,0,0,0);return{...m,...r};});
+  results.sort((a,b)=>b.conf-a.conf);
+  const top=results.filter(r=>r.conf>62).slice(0,3);
+  const combCote=top.reduce((a,r)=>a*(r.mainCote||1),1);
+
+  let html=`<div class="pop" style="margin-top:14px">
+  <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:12px">⚡ Analyse de ${toA.length} matchs</div>
+
+  <div class="card green-border">
+    <div class="ch" style="color:var(--green)">🏆 Top 3 paris les plus sûrs</div>
+    ${results.slice(0,3).map((r,i)=>`
+    <div style="background:var(--bg);border-radius:10px;padding:12px;margin-bottom:8px;border:.5px solid ${i===0?'rgba(61,232,160,.4)':i===1?'rgba(240,168,48,.3)':'var(--border)'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div><div style="font-size:13px;font-weight:700">${r.home} vs ${r.away}</div><div style="font-size:10px;color:var(--muted)">${r.league} · ${r.time}</div></div>
+        <div style="text-align:right;flex-shrink:0;margin-left:8px">
+          <div style="font-family:var(--mono);font-size:20px;font-weight:700;color:${i===0?'var(--green)':i===1?'var(--amber)':'var(--text)'}">${r.mainCote||'—'}</div>
+          <div style="font-size:10px;color:var(--muted)">${r.conf}% conf.</div>
+        </div>
+      </div>
+      <div>${r.recs.slice(0,2).map(rec=>`<span class="tag ${rec.cls}">${rec.t}${rec.c&&rec.c!=='—'?' @ '+rec.c:''}</span>`).join('')}</div>
+    </div>`).join('')}
+  </div>
+
+  ${top.length>=2?`<div class="rb green">
+    <div class="rb-t green">Combiné recommandé — ${top.length} matchs</div>
+    ${top.map(r=>`<div style="display:flex;gap:8px;padding:5px 0;border-bottom:.5px solid rgba(61,232,160,.15);align-items:flex-start">
+      <div style="width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;margin-top:4px"></div>
+      <div class="rb-tx"><strong>${r.home} vs ${r.away}</strong> (${r.time}) → <strong>${r.mainBet}</strong></div>
+    </div>`).join('')}
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+      <div style="font-size:12px;color:var(--muted)">Cote combinée estimée</div>
+      <div style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--green)">${combCote.toFixed(2)}</div>
+    </div>
+    <div class="rb-tx" style="margin-top:5px;font-size:11px">Mise max : <strong>1.5% bankroll</strong></div>
+  </div>`:''}
+
+  <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin:12px 0 8px">Tous les matchs</div>
+  ${results.map(r=>{
+    const cc=r.conf>70?'var(--green)':r.conf>55?'var(--amber)':'var(--red)';
+    return`<div class="mc" style="margin-bottom:9px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div><div style="font-size:13px;font-weight:600">${r.home} vs ${r.away}</div><div style="font-size:10px;color:var(--muted)">${r.league} · ${r.time}</div></div>
+      <div style="text-align:right"><div style="font-size:10px;color:var(--muted)">Confiance</div><div style="font-family:var(--mono);font-size:17px;font-weight:700;color:${cc}">${r.conf}%</div></div>
+    </div>
+    <div class="g3" style="margin-bottom:8px">
+      <div class="met" style="padding:8px"><div class="ml">A</div><div class="mv" style="font-size:15px;color:${r.r1>r.r2?'var(--green)':'var(--text)'}">${r.r1.toFixed(0)}%</div></div>
+      <div class="met" style="padding:8px"><div class="ml">Nul</div><div class="mv" style="font-size:15px">${r.rx.toFixed(0)}%</div></div>
+      <div class="met" style="padding:8px"><div class="ml">B</div><div class="mv" style="font-size:15px;color:${r.r2>r.r1?'var(--green)':'var(--text)'}">${r.r2.toFixed(0)}%</div></div>
+    </div>
+    <div>${r.recs.map(rec=>`<span class="tag ${rec.cls}">${rec.t}${rec.c&&rec.c!=='—'?' @ '+rec.c:''}</span>`).join('')}</div>
+  </div>`;}).join('')}
+  </div>`;
+
+  $('auto-analysis').innerHTML=html;
+  $('auto-analysis').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ============================================================
+// PWA
+// ============================================================
+(function(){
+  const m={name:'OddsIQ Pro',short_name:'OddsIQ',display:'standalone',start_url:'.',background_color:'#0a0a12',theme_color:'#0a0a12',icons:[{src:'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="32" fill="%230a0a12"/><text x="96" y="130" font-size="110" text-anchor="middle">⚡</text></svg>',sizes:'192x192',type:'image/svg+xml'}]};
+  const blob=new Blob([JSON.stringify(m)],{type:'application/json'});
+  const link=$('pwa-manifest');
+  if(link) link.setAttribute('href',URL.createObjectURL(blob));
+})();
+</script>
+</body>
+</html>
